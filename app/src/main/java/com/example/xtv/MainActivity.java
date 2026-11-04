@@ -35,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setDatabaseEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
-        webSettings.setSupportZoom(false);
+        webSettings.setSupportZoom(true);
+        webSettings.setBuiltInZoomControls(true);
+        webSettings.setDisplayZoomControls(false);
+        webSettings.setTextZoom(85);
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         webSettings.setAllowFileAccess(true);
