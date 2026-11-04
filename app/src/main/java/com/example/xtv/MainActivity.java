@@ -36,15 +36,25 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setMediaPlaybackRequiresUserGesture(false);
         webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         webSettings.setAllowFileAccess(true);
-
-        // Abilita esplicitamente il supporto al fullscreen via WebView
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                // Inietta uno script JavaScript per forzare il fullscreen sui video quando vengono riprodotti
+                String script = "javascript:(function() {" +
+                    "  document.addEventListener('play', function(e) {" +
+                    "    if (e.target.tagName === 'VIDEO') {" +
+                    "      if (e.target.requestFullscreen) {" +
+                    "        e.target.requestFullscreen();" +
+                    "      } else if (e.target.webkitRequestFullscreen) {" +
+                    "        e.target.webkitRequestFullscreen();" +
+                    "      }" +
+                    "    }" +
+                    "  }, true);" +
+                    "})();";
+                view.evaluateJavascript(script, null);
             }
         });
 
