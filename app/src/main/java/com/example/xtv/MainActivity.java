@@ -78,6 +78,11 @@ public class MainActivity extends AppCompatActivity {
             fullscreenContainer.addView(customView, new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             fullscreenContainer.setVisibility(View.VISIBLE);
+            
+            // Fondamentale: forza il focus sul contenitore fullscreen per catturare i tasti del telecomando
+            fullscreenContainer.setFocusable(true);
+            fullscreenContainer.setFocusableInTouchMode(true);
+            fullscreenContainer.requestFocus();
         }
 
         @Override
@@ -99,20 +104,20 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // Se il video è a schermo intero, gestiamo i comandi del telecomando
         if (customView != null) {
             String jsCommand = null;
-            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+            
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
                 jsCommand = "var v = document.querySelector('video'); if(v){ v.paused ? v.play() : v.pause(); }";
-            } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_MEDIA_REWIND) {
                 jsCommand = "var v = document.querySelector('video'); if(v){ v.currentTime -= 10; }";
-            } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
-                jsCommand = "var v.querySelector('video'); if(v){ v.currentTime += 10; }";
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT || keyCode == KeyEvent.KEYCODE_MEDIA_FAST_FORWARD) {
+                jsCommand = "var v = document.querySelector('video'); if(v){ v.currentTime += 10; }";
             }
 
             if (jsCommand != null) {
                 webView.evaluateJavascript(jsCommand, null);
-                return true;
+                return true; // Blocca la propagazione standard dell'evento
             }
         }
         return super.onKeyDown(keyCode, event);
