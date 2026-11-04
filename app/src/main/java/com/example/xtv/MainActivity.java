@@ -33,9 +33,20 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
         webSettings.setSupportZoom(false);
-        webSettings.setMediaPlaybackRequiresUserGesture(false); // Abilita l'avvio fluido dei video
+        webSettings.setMediaPlaybackRequiresUserGesture(false);
+        webSettings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+        webSettings.setAllowFileAccess(true);
 
-        webView.setWebViewClient(new WebViewClient());
+        // Abilita esplicitamente il supporto al fullscreen via WebView
+        webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
 
         webChromeClient = new MyWebChromeClient();
         webView.setWebChromeClient(webChromeClient);
@@ -53,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
             customView = view;
             customViewCallback = callback;
             
-            // Nasconde la WebView e mostra il player video a schermo intero
             webView.setVisibility(View.GONE);
             fullscreenContainer.addView(customView, new FrameLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
@@ -66,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
             
-            // Ripristina la WebView e nasconde il player a schermo intero
             fullscreenContainer.setVisibility(View.GONE);
             fullscreenContainer.removeView(customView);
             customView = null;
@@ -80,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        // Se il video è a schermo intero, chiude prima il video anziché uscire dall'app o tornare indietro nella cronologia
         if (customView != null) {
             webChromeClient.onHideCustomView();
         } else if (webView != null && webView.canGoBack()) {
