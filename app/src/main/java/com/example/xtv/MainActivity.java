@@ -1,6 +1,7 @@
 package com.example.xtv;
 
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebChromeClient;
@@ -42,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-                // Inietta uno script JavaScript per forzare il fullscreen sui video quando vengono riprodotti
                 String script = "javascript:(function() {" +
                     "  document.addEventListener('play', function(e) {" +
                     "    if (e.target.tagName === 'VIDEO') {" +
@@ -95,6 +95,27 @@ public class MainActivity extends AppCompatActivity {
                 customViewCallback.onCustomViewHidden();
             }
         }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Se il video è a schermo intero, gestiamo i comandi del telecomando
+        if (customView != null) {
+            String jsCommand = null;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER || keyCode == KeyEvent.KEYCODE_ENTER) {
+                jsCommand = "var v = document.querySelector('video'); if(v){ v.paused ? v.play() : v.pause(); }";
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                jsCommand = "var v = document.querySelector('video'); if(v){ v.currentTime -= 10; }";
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                jsCommand = "var v.querySelector('video'); if(v){ v.currentTime += 10; }";
+            }
+
+            if (jsCommand != null) {
+                webView.evaluateJavascript(jsCommand, null);
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
