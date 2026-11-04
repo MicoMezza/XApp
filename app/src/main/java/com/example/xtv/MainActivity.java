@@ -39,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
         webSettings.setAllowFileAccess(true);
         webSettings.setJavaScriptCanOpenWindowsAutomatically(true);
 
+        webSettings.setUserAgentString("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36");
+
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity {
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
             fullscreenContainer.setVisibility(View.VISIBLE);
             
-            // Fondamentale: forza il focus sul contenitore fullscreen per catturare i tasti del telecomando
             fullscreenContainer.setFocusable(true);
             fullscreenContainer.setFocusableInTouchMode(true);
             fullscreenContainer.requestFocus();
@@ -117,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
             if (jsCommand != null) {
                 webView.evaluateJavascript(jsCommand, null);
-                return true; // Blocca la propagazione standard dell'evento
+                return true;
             }
         }
         return super.onKeyDown(keyCode, event);
