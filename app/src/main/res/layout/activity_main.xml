@@ -4,9 +4,18 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- WebView principale -->
     <WebView
         android:id="@+id/webView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <!-- Contenitore per il video a schermo intero -->
+    <FrameLayout
+        android:id="@+id/fullscreenContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:visibility="gone" />
 
 </RelativeLayout>
