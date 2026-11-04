@@ -22,10 +22,7 @@ jobs:
       - name: Configurazione Android SDK
         uses: android-actions/setup-android@v3
         with:
-          packages: |
-            platforms;android-34
-            build-tools;34.0.0
-            cmdline-tools;latest
+          packages: platforms;android-34 build-tools;34.0.0 cmdline-tools;latest
 
       - name: Imposta permessi di esecuzione per Gradle
         run: chmod +x gradlew || true
